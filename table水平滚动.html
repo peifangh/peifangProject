@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>tt</title>
+    <style type="text/css">
+        .wrap {
+            width: 1000px;
+            height: 1000px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+        .left, .right, .center-inner{
+            height: 1000px;
+        }
+        .left, .center, .right {
+            float: left;
+        }
+        .left, .right {
+            width: 100px;
+            background: #ddd;
+        }
+        .center {
+            position: relative;
+            width: 800px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            font-size: 100px;
+            height: 1050px;
+        }
+        .center-inner {
+            width: 4000px;
+        }
+
+    </style>
+</head>
+<body>
+    <script type="text/javascript" src="http://i0.sinaimg.cn/dy/js/jquery/jquery-1.7.2.min.js"></script>
+    <div class="wrap" id="j_wrap">
+        <div node-type="left" class="left">click me: scroll from left</div>
+        <div node-type="center" class="center">
+            <div node-type="centerInner" class="center-inner">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </div>
+        </div>
+        <div node-type="right" class="right">click me: scroll from right</div>
+    </div>
+
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+    consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+    proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+    <script type="text/javascript">
+        function getNodes(wrap, attr){
+            attr = attr || 'node-type';
+            wrap = $(wrap);
+            var nodes = $('[node-type]', wrap);
+            var nodesObj = {};
+            nodesObj.wrap = wrap;
+            nodes.each(function(){
+                var item = $(this);
+                nodesObj[item.attr(attr)] = item;
+            })
+            return nodesObj; 
+        }
+        (function(){
+            var nodes = getNodes('#j_wrap');
+            var width = nodes.center.width();
+            var scroll = {
+                left: function(){
+                    var scrollLeft = nodes.center.scrollLeft();
+                    nodes.center.animate({
+                       scrollLeft: scrollLeft - width
+                   },500);
+                },
+                right: function(){
+                    var scrollLeft =  nodes.center.scrollLeft();
+                    nodes.center.animate({
+                        scrollLeft: scrollLeft + width
+                    },500)
+                }
+            }
+            nodes.wrap.on('click', '[node-type=left]',function(){
+                scroll.left();
+            });
+            nodes.wrap.on('click', '[node-type=right]',function(){
+                scroll.right();
+            })
+        })();
+    </script>
+</body>
+</html>
