@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>滚动到底部</title>
+    <style type="text/css">
+    .wrap{width:600px;margin:0 auto;}
+    .input{display:block;width:590px;height:100px; margin: 4px 0; padding:4px;border:1px solid #ccc;}
+    </style>
+</head>
+<body>
+
+    <div class="wrap" id="j_wrap">
+        <select node-type="select">
+            <option value="1">一</option>
+            <option value="2">二</option>
+            <option value="3">三</option>
+        </select>
+        <div node-type="inputs"></div>
+    </div>
+    <script type="text/javascript" src="http://news.sina.com.cn/js/792/2014-03-18/80/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript">
+        function getNodes(wrap, attr){
+            wrap = $(wrap);
+            attr = attr || 'node-type';
+            var nodes = $('[' + attr + ']', wrap);
+            var nodesObj = {};
+            nodesObj.wrap = wrap;
+            nodes.each(function(){
+                var item = $(this);
+                nodesObj[item.attr(attr)] = item
+            })
+            return nodesObj;
+        }
+        (function(){
+            var nodes = getNodes('#j_wrap');
+            function Tip(wrap,index){
+                this.wrap = wrap;
+            }
+            Tip.prototype = {
+                show: function(){
+                     this.wrap.show()
+                },
+                hide:function(){
+                    this.wrap.hide()
+                }
+            };
+            function render( val ) {
+                var html = '<div class="input" id="j_input_'+ val +'"><h2>'+ val +'</h2><input type="text" id="j_number_'+ val +'" /></div>';
+                nodes.inputs.append($(html));
+                return new Tip($('#j_input_' + val),val)
+             }
+
+            var inputs = {};
+            var currentVal = 1;
+            function change(index){
+                if(inputs[currentVal]){
+                    inputs[currentVal].hide();
+                }
+                currentVal = index;
+                if(!inputs[currentVal]){
+                    inputs[currentVal] = render(currentVal)
+                }
+                inputs[currentVal].show()
+            }
+            nodes.wrap.on('change', '[node-type=select]', function(){
+                var index = $(this).val();
+                change(index)
+            });
+            change(1)
+        })();
+    </script>
+</body>
+</html>
